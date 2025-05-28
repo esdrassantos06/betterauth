@@ -1,8 +1,27 @@
 import type { NextConfig } from "next";
 
+const cspHeader = `
+default-src 'self';
+script-src 'self';
+style-src 'self';
+img-src 'self' blob: data:;
+font-src 'self';
+object-src 'none';
+base-uri 'self';
+form-action 'self';
+frame-ancestors 'none';
+upgrade-insecure-requests;
+`;
 
+const contentSecurityPolicyHeaderValue = cspHeader
+  .replace(/\s{2,}/g, " ")
+  .trim();
 
 const securityHeaders = [
+  {
+    key: "Content-Security-Policy",
+    value: contentSecurityPolicyHeaderValue,
+  },
   {
     key: "Referrer-Policy",
     value: "strict-origin-when-cross-origin",
