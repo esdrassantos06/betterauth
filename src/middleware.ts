@@ -6,31 +6,38 @@ const protectedRoutes = ["/profile"];
 export async function middleware(req: NextRequest) {
   const { nextUrl } = req;
   const sessionCookie = getSessionCookie(req);
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
-  function generateNonce(length = 16): string {
-    const array = new Uint8Array(length);
-    crypto.getRandomValues(array);
-    return Buffer.from(array).toString('base64');
-  }
-  const nonce = generateNonce();
-
-  const res = NextResponse.next();
-
-  const csp = `
+  const cspHeader = `
   default-src 'self';
-  script-src 'self' 'nonce-${nonce}';
-  style-src 'self' 'unsafe-inline';
-  img-src 'self' data: blob:;
+  script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
+  style-src 'self' 'nonce-${nonce}';
+  img-src 'self' blob: data:;
   font-src 'self';
   object-src 'none';
   base-uri 'self';
   form-action 'self';
   frame-ancestors 'none';
   upgrade-insecure-requests;
-`.replace(/\n/g, "");
+`;
+  // Replace newline characters and spaces
+  const contentSecurityPolicyHeaderValue = cspHeader
+    .replace(/\s{2,}/g, " ")
+    .trim();
 
-  res.headers.set("Content-Security-Policy", csp);
-  res.headers.set("x-nonce", nonce);
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-nonce", nonce);
+
+  const res = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+
+  requestHeaders.set(
+    "Content-Security-Policy",
+    contentSecurityPolicyHeaderValue
+  );
 
   const isLoggedIn = !!sessionCookie;
   const isProtectedRoute = protectedRoutes.includes(nextUrl.pathname);
@@ -48,14 +55,20 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
-  ],
-};
+    matcher: [
+      /*
+       * Match all request paths except for the ones starting with:
+       * - api (API routes)
+       * - _next/static (static files)
+       * - _next/image (image optimization files)
+       * - favicon.ico (favicon file)
+       */
+      {
+        source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+        missing: [
+          { type: 'header', key: 'next-router-prefetch' },
+          { type: 'header', key: 'purpose', value: 'prefetch' },
+        ],
+      },
+    ],
+  }
