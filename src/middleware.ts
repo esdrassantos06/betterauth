@@ -7,7 +7,30 @@ export async function middleware(req: NextRequest) {
   const { nextUrl } = req;
   const sessionCookie = getSessionCookie(req);
 
+  function generateNonce(length = 16): string {
+    const array = new Uint8Array(length);
+    crypto.getRandomValues(array);
+    return Buffer.from(array).toString('base64');
+  }
+  const nonce = generateNonce();
+
   const res = NextResponse.next();
+
+  const csp = `
+  default-src 'self';
+  script-src 'self' 'nonce-${nonce}';
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data: blob:;
+  font-src 'self';
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+  frame-ancestors 'none';
+  upgrade-insecure-requests;
+`.replace(/\n/g, "");
+
+  res.headers.set("Content-Security-Policy", csp);
+  res.headers.set("x-nonce", nonce);
 
   const isLoggedIn = !!sessionCookie;
   const isProtectedRoute = protectedRoutes.includes(nextUrl.pathname);
