@@ -1,21 +1,10 @@
 import type { NextConfig } from "next";
 
 const cspHeader = `
-default-src 'self';
-script-src 'self' 'unsafe-inline' 'unsafe-eval';
-style-src 'self' 'unsafe-inline' 'unsafe-eval';
-img-src 'self' blob: data:;
-font-src 'self';
-object-src 'none';
-base-uri 'self';
-form-action 'self';
-frame-ancestors 'none';
-upgrade-insecure-requests;
+default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' blob: data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests;
 `;
 
-const contentSecurityPolicyHeaderValue = cspHeader
-  .replace(/\s{2,}/g, " ")
-  .trim();
+const contentSecurityPolicyHeaderValue = cspHeader.replace(/\s+/g, ' ').trim();
 
 const securityHeaders = [
   {
