@@ -43,7 +43,7 @@ export default function AuthButtons({
 
   return (
     <div className="space-y-3">
-      <Button variant={"outline"} className="w-full" onClick={handleClick}>
+      <Button variant={"outline"} className="w-full" disabled={isPending} onClick={handleClick}>
         {isPending ? (
           "Loading"
         ) : (

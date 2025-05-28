@@ -1,7 +1,6 @@
 "use client";
 
-import type React from "react";
-
+import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,52 +16,40 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail } from "lucide-react";
 import { toast } from "sonner";
-import { signUp } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import AuthButtons from "./Auth-buttons";
+import ReturnButton from "../returnButton";
+import { SignUpEmailActions } from "@/actions/sign-up-email-actions";
 
 export const RegisterForm = () => {
+  const router = useRouter();
+  const [isPending, setIsPending] = useState(false);
+
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
     evt.preventDefault();
+
+    setIsPending(true);
+
     const formData = new FormData(evt.target as HTMLFormElement);
+    const { error } = await SignUpEmailActions(formData);
 
-    const name = String(formData.get("name"));
-    if (!name) return toast.error("Please enter your name");
+    if (error) {
+      toast.error(error);
+      setIsPending(false);
+    } else {
+      toast.success("User Registered Successfuly");
+      router.push("/profile");
+      window.location.reload();
+    }
 
-    const email = String(formData.get("email"));
-    if (!email) return toast.error("Please enter a email");
-
-    const password = String(formData.get("password"));
-    if (!password) return toast.error("Please enter a password");
-
-    const repeatPassword = String(formData.get("confirmPassword"));
-    if (!repeatPassword || repeatPassword !== password)
-      return toast.error("Passwords doesn't match.");
-
-    await signUp.email(
-      {
-        name,
-        email,
-        password,
-      },
-      {
-        onRequest: () => {},
-        onResponse: () => {},
-        onError: (ctx) => {
-          toast.error(ctx.error.message);
-        },
-        onSuccess: () => {
-          toast.success("User Registered Successfuly");
-          redirect("/");
-        },
-      }
-    );
+    setIsPending(false);
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
+          <ReturnButton href="/" label="Voltar" />
           <CardTitle className="text-2xl font-bold text-center">
             Criar Conta
           </CardTitle>
@@ -134,9 +121,9 @@ export const RegisterForm = () => {
               </Label>
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" disabled={isPending} className="w-full">
               <Mail className="w-4 h-4 mr-2" />
-              Criar Conta
+              {isPending ? "Criar Conta" : "Carregando"}
             </Button>
           </form>
 

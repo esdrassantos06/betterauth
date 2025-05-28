@@ -16,44 +16,45 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Mail } from "lucide-react";
 import { toast } from "sonner";
-import { signIn } from "@/lib/auth-client";
-import { redirect } from "next/navigation";
 import AuthButtons from "./Auth-buttons";
+import ReturnButton from "../returnButton";
+import { useState } from "react";
+import { SignInEmailActions } from "@/actions/sign-in-email-actions";
+import { useRouter } from "next/navigation";
+
 
 export const LoginForm = () => {
+
+  const router = useRouter()
+  const [isPending, setIsPending] = useState(false);
+
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
     evt.preventDefault();
+
+    setIsPending(true);
+
     const formData = new FormData(evt.target as HTMLFormElement);
+    const { error } = await SignInEmailActions(formData);
 
-    const email = String(formData.get("email"));
-    if (!email) return toast.error("Please enter a email");
+    if(error){
+      toast.error(error)
+      setIsPending(false);
+    }
+    else{
+      toast.success("Login Successful. Good to have you back!");
+      router.push("/profile");
+      window.location.reload();
+    }
 
-    const password = String(formData.get("password"));
-    if (!password) return toast.error("Please enter a password");
-
-    await signIn.email(
-      {
-        email,
-        password,
-      },
-      {
-        onRequest: () => {},
-        onResponse: () => {},
-        onError: (ctx) => {
-          toast.error(ctx.error.message);
-        },
-        onSuccess: () => {
-          toast.success("User Logged Successfuly");
-          redirect("/profile");
-        },
-      }
-    );
+    setIsPending(false);
   }
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
+          <ReturnButton href="/" label="Voltar" />
           <CardTitle className="text-2xl font-bold text-center">
             Entrar
           </CardTitle>
@@ -107,7 +108,7 @@ export const LoginForm = () => {
                 Esqueceu a senha?
               </Link>
             </div>
-            <Button type="submit" className="w-full">
+            <Button disabled={isPending} type="submit" className="w-full">
               <Mail className="w-4 h-4 mr-2" />
               Entrar com Email
             </Button>

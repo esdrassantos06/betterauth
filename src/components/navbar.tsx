@@ -1,8 +1,38 @@
+"use client";
 import Link from "next/link";
 import { Zap } from "lucide-react";
 import { buttonVariants } from "./ui/button";
+import { useSession } from "@/lib/auth-client";
+import { SignOutButton } from "./auth/sign-out-button";
+
+const Btn = ({session} : {session: unknown }) => {
+  if (!session) {
+    return (
+      <>
+        <Link
+          href={"/auth/login"}
+          className={buttonVariants({ variant: "ghost", size: "sm" })}
+        >
+          Login
+        </Link>
+        <Link
+          href={"/auth/register"}
+          className={buttonVariants({ size: "sm" })}
+        >
+          Registrar
+        </Link>
+      </>
+    );
+  } else {
+    return <SignOutButton />;
+  }
+};
 
 export default function Navbar() {
+  const { data: session } = useSession();
+
+
+
   return (
     <header className="px-4 lg:px-6 h-16 flex items-center border-b">
       <Link className="flex items-center justify-center" href="/">
@@ -30,18 +60,7 @@ export default function Navbar() {
         </Link>
       </nav>
       <div className="ml-4 flex gap-2">
-        <Link
-          href={"/auth/login"}
-          className={buttonVariants({ variant: "ghost", size: "sm" })}
-        >
-          Login
-        </Link>
-        <Link
-          href={"/auth/register"}
-          className={buttonVariants({ size: "sm" })}
-        >
-          Registrar
-        </Link> 
+      <Btn session={session} />
       </div>
     </header>
   );

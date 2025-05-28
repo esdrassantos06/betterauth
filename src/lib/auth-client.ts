@@ -6,5 +6,5 @@ const authClient = createAuthClient({
     baseURL: URL,
 });
 
-export const {signIn, signUp, signOut, getSession} = authClient;
+export const {signIn, signUp, signOut, useSession} = authClient;
 
