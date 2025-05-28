@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
 
   const cspHeader = `
   default-src 'self';
-  script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
+  script-src 'self' 'unsafe-inline' 'unsafe-eval';
   style-src 'self' 'nonce-${nonce}';
   img-src 'self' blob: data:;
   font-src 'self';
@@ -20,7 +20,6 @@ export async function middleware(req: NextRequest) {
   frame-ancestors 'none';
   upgrade-insecure-requests;
 `;
-  // Replace newline characters and spaces
   const contentSecurityPolicyHeaderValue = cspHeader
     .replace(/\s{2,}/g, " ")
     .trim();
@@ -55,20 +54,20 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: [
-      /*
-       * Match all request paths except for the ones starting with:
-       * - api (API routes)
-       * - _next/static (static files)
-       * - _next/image (image optimization files)
-       * - favicon.ico (favicon file)
-       */
-      {
-        source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
-        missing: [
-          { type: 'header', key: 'next-router-prefetch' },
-          { type: 'header', key: 'purpose', value: 'prefetch' },
-        ],
-      },
-    ],
-  }
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    {
+      source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
+      missing: [
+        { type: "header", key: "next-router-prefetch" },
+        { type: "header", key: "purpose", value: "prefetch" },
+      ],
+    },
+  ],
+};
