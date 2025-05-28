@@ -2,20 +2,25 @@
 
 import { auth, ErrorCode } from "@/lib/auth";
 import { APIError } from "better-auth/api";
+import { signUpSchema } from "@/validation/signUpSchema";
 
 export async function SignUpEmailActions(formData: FormData) {
-  const name = String(formData.get("name"));
-  if (!name) return { error: "Please enter your name" };
+  const rawData = {
+    name: formData.get("name"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword"),
+    acceptTerms: formData.get("acceptTerms"),
+  };
 
-  const email = String(formData.get("email"));
-  if (!email) return { error: "Please enter a email" };
+  const parsed = signUpSchema.safeParse(rawData);
 
-  const password = String(formData.get("password"));
-  if (!password) return { error: "Please enter a password" };
+  if (!parsed.success) {
+    const firstError = parsed.error.errors[0];
+    return { error: firstError.message };
+  }
 
-  const repeatPassword = String(formData.get("confirmPassword"));
-  if (!repeatPassword || repeatPassword !== password)
-    return { error: "Passwords doesn't match." };
+  const { name, email, password } = parsed.data;
 
   try {
     await auth.api.signUpEmail({
@@ -25,12 +30,10 @@ export async function SignUpEmailActions(formData: FormData) {
         password,
       },
     });
-
     return { error: null };
   } catch (err) {
     if (err instanceof APIError) {
       const errCode = err.body ? (err.body.code as ErrorCode) : "UNKNOWN";
-
       switch (errCode) {
         default:
           return { error: err.message };
@@ -38,5 +41,5 @@ export async function SignUpEmailActions(formData: FormData) {
     }
   }
 
-  return { error: "Internal Server Error" };
+  return { error: "An unexpected error occurred. Please try again." };
 }

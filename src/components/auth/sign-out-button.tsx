@@ -1,12 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { signOut } from "@/lib/auth-client";
 import { toast } from "sonner";
 
 export const SignOutButton = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   async function handleClick() {
     await signOut({

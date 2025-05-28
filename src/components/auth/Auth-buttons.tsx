@@ -2,8 +2,10 @@
 
 import { Button } from "../ui/button";
 import { signIn } from "@/lib/auth-client";
+import { Loader } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Icon } from "@iconify/react";
 
 interface SignInOauthButtonProps {
   provider: "google" | "github";
@@ -43,11 +45,27 @@ export default function AuthButtons({
 
   return (
     <div className="space-y-3">
-      <Button variant={"outline"} className="w-full" disabled={isPending} onClick={handleClick}>
+      <Button
+        variant={"outline"}
+        className="w-full"
+        disabled={isPending}
+        onClick={handleClick}
+      >
         {isPending ? (
-          "Loading"
+          <>
+            <Loader size={12} className="animate-spin" /> Loading
+          </>
         ) : (
           <>
+            {provider === "github" ? (
+              <>
+                <Icon icon={"mdi:github"} className="w-3" />
+              </>
+            ) : (
+              <>
+                <Icon icon={"devicon:google"} className="w-3" />
+              </>
+            )}
             Sign {action} with {providerName}
           </>
         )}

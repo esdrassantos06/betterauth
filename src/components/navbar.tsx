@@ -32,7 +32,6 @@ export default function Navbar() {
   const { data: session } = useSession();
 
 
-
   return (
     <header className="px-4 lg:px-6 h-16 flex items-center border-b">
       <Link className="flex items-center justify-center" href="/">

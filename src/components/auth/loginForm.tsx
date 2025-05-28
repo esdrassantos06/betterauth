@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Mail } from "lucide-react";
+import { Loader, Mail } from "lucide-react";
 import { toast } from "sonner";
 import AuthButtons from "./Auth-buttons";
 import ReturnButton from "../returnButton";
@@ -22,10 +22,8 @@ import { useState } from "react";
 import { SignInEmailActions } from "@/actions/sign-in-email-actions";
 import { useRouter } from "next/navigation";
 
-
 export const LoginForm = () => {
-
-  const router = useRouter()
+  const router = useRouter();
   const [isPending, setIsPending] = useState(false);
 
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
@@ -36,11 +34,10 @@ export const LoginForm = () => {
     const formData = new FormData(evt.target as HTMLFormElement);
     const { error } = await SignInEmailActions(formData);
 
-    if(error){
-      toast.error(error)
+    if (error) {
+      toast.error(error);
       setIsPending(false);
-    }
-    else{
+    } else {
       toast.success("Login Successful. Good to have you back!");
       router.push("/profile");
       window.location.reload();
@@ -48,7 +45,6 @@ export const LoginForm = () => {
 
     setIsPending(false);
   }
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -109,8 +105,17 @@ export const LoginForm = () => {
               </Link>
             </div>
             <Button disabled={isPending} type="submit" className="w-full">
-              <Mail className="w-4 h-4 mr-2" />
-              Entrar com Email
+              {isPending ? (
+                <>
+                <Loader size={12} className="animate-spin"/> Loading...
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Mail className="w-4 h-4 mr-2" />
+                  Entrar com Email
+                </>
+              )}
             </Button>
           </form>
 

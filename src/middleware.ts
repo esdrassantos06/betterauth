@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
 
-const protectedRoutes = ["/profile"];
+const protectedRoutes = ["/profile", "/admin"];
 
 export async function middleware(req: NextRequest) {
   const { nextUrl } = req;
@@ -10,7 +10,12 @@ export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
 
   const isLoggedIn = !!sessionCookie;
-  const isProtectedRoute = protectedRoutes.includes(nextUrl.pathname);
+  const isProtectedRoute = protectedRoutes.some((route) => {
+    if (route === nextUrl.pathname) return true;
+    if (nextUrl.pathname.startsWith(route + "/")) return true;
+    return false;
+  });
+
   const isAuthRoute = nextUrl.pathname.startsWith("/auth");
 
   if (isProtectedRoute && !isLoggedIn) {

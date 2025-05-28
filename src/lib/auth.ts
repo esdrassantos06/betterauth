@@ -28,6 +28,14 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_SECRET as string,
     },
   },
+  user: {
+    additionalFields: {
+      role: {
+        type: ["USER", "ADMIN"],
+        input: false,
+      },
+    },
+  },
   session: {
     expiresIn: 60 * 60 * 24 * 30, // 30 days
     updateAge: 60 * 60 * 24, // 1 day (every 1 day the session expiration is updated)

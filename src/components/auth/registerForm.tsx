@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Mail } from "lucide-react";
+import { Loader, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import AuthButtons from "./Auth-buttons";
@@ -108,7 +108,7 @@ export const RegisterForm = () => {
             </div>
 
             <div className="flex items-center space-x-2">
-              <Checkbox id="terms" required />
+              <Checkbox id="terms" name="acceptTerms" />
               <Label htmlFor="terms" className="text-sm">
                 Aceito os{" "}
                 <Link href="/terms" className="text-blue-600 hover:underline">
@@ -122,8 +122,16 @@ export const RegisterForm = () => {
             </div>
 
             <Button type="submit" disabled={isPending} className="w-full">
-              <Mail className="w-4 h-4 mr-2" />
-              {isPending ? "Criar Conta" : "Carregando"}
+              {isPending ? (
+                <>
+                  <Loader size={12} className="animate-spin" /> Loading...
+                </>
+              ) : (
+                <>
+                  <Mail className="w-4 h-4 mr-2" />
+                  Criar Conta
+                </>
+              )}
             </Button>
           </form>
 
