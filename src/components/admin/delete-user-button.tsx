@@ -1,6 +1,6 @@
 "use client";
 import { Trash } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { useState } from "react";
 import { deleteUserAction } from "@/actions/delete-user-action";
 import { toast } from "sonner";
@@ -43,11 +43,12 @@ export const DeleteUserButton = ({ userId }: DeleteUserButtonProps) => {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
-        <Button disabled={isPending} size={"icon"} variant={"destructive"}>
-          <span className="sr-only">Delete user</span>
-          <Trash size={12} />
-        </Button>
+      <AlertDialogTrigger
+        disabled={isPending}
+        className={buttonVariants({ size: "sm", variant: "destructive" })}
+      >
+        <span className="sr-only">Delete user</span>
+        <Trash size={12} />
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
