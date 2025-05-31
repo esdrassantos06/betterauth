@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "../ui/button";
-import { signIn } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 import { Loader } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -20,7 +20,7 @@ export default function AuthButtons({
 
   async function handleClick() {
     setIsPending(true);
-    await signIn.social({
+    await authClient.signIn.social({
       provider,
       callbackURL: "/profile",
       errorCallbackURL: "/auth/login/error",

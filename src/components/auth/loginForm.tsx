@@ -47,11 +47,11 @@ export const LoginForm = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <ReturnButton href="/" label="Voltar" />
-          <CardTitle className="text-2xl font-bold text-center">
+          <CardTitle className="text-center text-2xl font-bold">
             Entrar
           </CardTitle>
           <CardDescription className="text-center">
@@ -68,7 +68,7 @@ export const LoginForm = () => {
               <Separator className="w-full" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-muted-foreground">
+              <span className="text-muted-foreground bg-white px-2">
                 Ou continue com
               </span>
             </div>
@@ -107,12 +107,12 @@ export const LoginForm = () => {
             <Button disabled={isPending} type="submit" className="w-full">
               {isPending ? (
                 <>
-                <Loader size={12} className="animate-spin"/> Loading...
+                  <Loader size={12} className="animate-spin" /> Loading...
                 </>
               ) : (
                 <>
                   {" "}
-                  <Mail className="w-4 h-4 mr-2" />
+                  <Mail className="mr-2 h-4 w-4" />
                   Entrar com Email
                 </>
               )}
@@ -123,7 +123,7 @@ export const LoginForm = () => {
             Não tem uma conta?{" "}
             <Link
               href="/auth/register"
-              className="text-blue-600 hover:underline font-medium"
+              className="font-medium text-blue-600 hover:underline"
             >
               Criar conta
             </Link>

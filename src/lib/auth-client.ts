@@ -5,11 +5,9 @@ import { ac, roles } from "@/lib/permissions";
 
 const URL = process.env.NEXT_PUBLIC_URL;
 
-const authClient = createAuthClient({
+export const authClient = createAuthClient({
   baseURL: URL,
   plugins: [inferAdditionalFields<typeof auth>(), adminClient({ ac, roles })],
 });
 
-export type Session = typeof authClient.$Infer.Session
-
-export const { signIn, signUp, signOut, useSession, admin } = authClient;
+export type Session = typeof authClient.$Infer.Session;

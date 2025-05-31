@@ -46,11 +46,11 @@ export const RegisterForm = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <ReturnButton href="/" label="Voltar" />
-          <CardTitle className="text-2xl font-bold text-center">
+          <CardTitle className="text-center text-2xl font-bold">
             Criar Conta
           </CardTitle>
           <CardDescription className="text-center">
@@ -67,7 +67,7 @@ export const RegisterForm = () => {
               <Separator className="w-full" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-muted-foreground">
+              <span className="text-muted-foreground bg-white px-2">
                 Ou registre-se com
               </span>
             </div>
@@ -75,7 +75,7 @@ export const RegisterForm = () => {
 
           {/* Registro com Email */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2 w-full">
+            <div className="w-full space-y-2">
               <Label htmlFor="Name">Nome</Label>
               <Input id="Name" name="name" placeholder="João Silva" />
             </div>
@@ -128,7 +128,7 @@ export const RegisterForm = () => {
                 </>
               ) : (
                 <>
-                  <Mail className="w-4 h-4 mr-2" />
+                  <Mail className="mr-2 h-4 w-4" />
                   Criar Conta
                 </>
               )}
@@ -139,7 +139,7 @@ export const RegisterForm = () => {
             Já tem uma conta?{" "}
             <Link
               href="/auth/login"
-              className="text-blue-600 hover:underline font-medium"
+              className="font-medium text-blue-600 hover:underline"
             >
               Fazer login
             </Link>

@@ -35,7 +35,7 @@ const AdminDashboard = async () => {
       <h1>Admin Dashboard</h1>
       Olá! {session.user.name}
       <h3 className="mt-4">Aqui tem todos os usuários:</h3>
-      <table className="mt-4 table-auto border-collapse border border-gray-400 w-full max-w-4xl">
+      <table className="mt-4 w-full max-w-4xl table-auto border-collapse border border-gray-400">
         <thead className="bg-slate-200">
           <tr>
             <th className="border border-gray-400 px-4 py-2">ID</th>

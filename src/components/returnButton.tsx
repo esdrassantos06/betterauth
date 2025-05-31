@@ -7,9 +7,9 @@ interface ReturnButtonProps {
 }
 
 export default function ReturnButton({ href, label }: ReturnButtonProps) {
-    return(
-        <Button asChild size={"sm"} className="w-full">
-            <Link href={href} >{label}</Link>
-        </Button>
-    )
+  return (
+    <Button asChild size={"sm"} className="w-full">
+      <Link href={href}>{label}</Link>
+    </Button>
+  );
 }

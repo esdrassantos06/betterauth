@@ -7,7 +7,9 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "push": "prisma db push"
+    "push": "prisma db push",
+    "format:check": "prettier . --check",
+    "format": "prettier . --write"
   },
   "dependencies": {
     "@node-rs/argon2": "^2.0.2",
@@ -37,6 +39,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.12",
     "prisma": "^6.8.2",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.0",
